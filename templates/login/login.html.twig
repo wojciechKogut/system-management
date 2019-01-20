@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{#{% extends 'base.html.twig' %}#}
 
 {% block title %} Login {% endblock %}
 
@@ -22,7 +22,7 @@
                 {#<div class="text-danger mt-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
             {#{% endif %}#}
 
-            <input class="btn btn-success mt-2 float-right" name="submit" type="submit">Login</input>
+            <input class="btn btn-success mt-2 float-right" name="submit" value="Submit" type="submit">
         </form>
     </div>
     {% block javascripts %}
