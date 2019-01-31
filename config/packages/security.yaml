@@ -1,12 +1,36 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+        App\Entity\ResetPassword:
+            algorithm: bcrypt
     providers:
         in_memory: { memory: ~ }
+        db_provider:
+                entity:
+                    class: App\Entity\User
+                    property: name
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            provider: db_provider
+            stateless: true
+            anonymous: true
+            form_login:
+                username_parameter: name
+                password_parameter: password
         main:
+            anonymous: ~
+            provider: db_provider
+            form_login:
+                login_path: login
+                check_path: login
+        register:
+            pattern:  ^/register
+            stateless: true
             anonymous: true
 
             # activate different ways to authenticate
