@@ -1,11 +1,16 @@
 const $ = require('jquery');
 const isEmpty = require('./isEmpty');
 
-$('input[name=submit]').click(function (input) {
+$('input[name=accept]').click(function (input) {
     input.preventDefault();
 
     const username = $('#username').val();
     const password = $('#password').val();
+    const form = $('form:first');
+
+    if (!isEmpty(username) && !isEmpty(password)) {
+        form.submit();
+    }
 
     if (isEmpty(username)) {
         $('#username-error span').addClass('text-danger');
