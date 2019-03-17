@@ -1,7 +1,7 @@
 <?php
-namespace App\Controller;
+namespace App\Api;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\Security\Core\Security;
@@ -12,11 +12,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LoginController extends FOSRestController
 {
-//    /**
-//     * @Rest\Post("/api/login")
-//     */
-//    public function login(Request $request, AuthenticationUtils $authenticationUtils)
-//    {
-//        return $this->handleView($this->view($request->request->all(), 400));
-//    }
+    /**
+     * @Rest\Post("/api/login")
+     * @return \FOS\RestBundle\View\View|Response
+     */
+    public function login(Request $request)
+    {
+
+        $view = $this->view($request->request, 200);
+
+        return $this->handleView($view);
+//        return new JsonResponse(['test' => 'test1']);
+    }
 }

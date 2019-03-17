@@ -5,35 +5,35 @@ use App\Entity\User;
 use App\Form\RegisterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use FOS\RestBundle\Controller\FOSRestController;
 
-class RegistrationController extends Controller
+class RegistrationController extends FOSRestController
 {
     /**
-     * @Route("/registration", name="register_user")
+     * @Rest\Post("/api/register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
-        $registerForm = $this->createForm(RegisterType::class, $user);
-        $registerForm->handleRequest($request);
+        $userDataFromForm = $request->request->all();
+        $entityManager = $this->getDoctrine()->getManager();
 
-        if (!$registerForm->isValid() || !$registerForm->isSubmitted()) {
-            return $this->render(
-                'registration/registration.html.twig',
-                [
-                    'form' => $registerForm->createView()
-                ]
-            );
+        $userExists = $entityManager->getRepository(User::class)->findOneBy(['username' => $userDataFromForm['username']]);
+        if (!empty($userExists)) {
+            $view = $this->view('User exists, try again', 400);
+            return $this->handleView($view);
         }
 
-        $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-        $user->setPassword($password);
-        $entityManager = $this->getDoctrine()->getManager();
+        $hashedPassword = $passwordEncoder->encodePassword($user, $userDataFromForm['password']);
+        $user->setPassword($hashedPassword);
+        $user->setEmail($userDataFromForm['email']);
+        $user->setUsername($userDataFromForm['username']);
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->redirect('/');
+        return $this->handleView($this->view($user, 200));
     }
 }

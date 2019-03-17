@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends Controller
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/{reactRouting}", name="home", defaults={"reactRouting": null})
      */
     public function index()
     {

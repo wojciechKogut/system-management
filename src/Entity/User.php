@@ -49,6 +49,11 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $recovery_password;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -136,5 +141,17 @@ class User implements UserInterface
             $this->username,
             $this->password,
             ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    public function getRecoveryPassword(): ?string
+    {
+        return $this->recovery_password;
+    }
+
+    public function setRecoveryPassword(?string $recovery_password): self
+    {
+        $this->recovery_password = $recovery_password;
+
+        return $this;
     }
 }
